@@ -1,4 +1,5 @@
 from random import shuffle
+
 """
 Scrabble Game
 Classes:
@@ -57,8 +58,6 @@ class Tile:
     def get_score(self):
         #Returns the tile's score value.
         return self.score
-
-#get_letter ama get_score itu kek return value karena elemen nya private
 
 class Bag:
     """
@@ -156,6 +155,10 @@ class Rack:
         while self.get_rack_length() < 7 and self.bag.get_remaining_tiles() > 0:
             self.add_to_rack()
 
+    def shuffle_rack(self):
+        shuffle(self.rack)
+
+
 class Player:
     """
     Creates an instance of a player. Initializes the player's rack, and allows you to set/get a player name.
@@ -208,7 +211,7 @@ class Board:
         board = list(self.board)
         for i in range(len(board)):
             if i < 10:
-                board[i] = str(i) + "  | " + " | ".join(str(item) for item in board[i]) + " |" 
+                board[i] = str(i) + "  | " + " | ".join(str(item) for item in board[i]) + " |"
             if i >= 10:
                 board[i] = str(i) + " | " + " | ".join(str(item) for item in board[i]) + " |"
         board_str += "\n   |_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n".join(board)
@@ -238,25 +241,19 @@ class Board:
         direction = direction.lower()
         word = word.upper()
 
-        # ANSI escape code for red text
-        RED = "\033[31m"
-        RESET = "\033[0m"
-
-        # Places the word going rightwards
+        #Places the word going rightwards
         if direction.lower() == "right":
             for i in range(len(word)):
                 if self.board[location[0]][location[1]+i] != "   ":
                     premium_spots.append((word[i], self.board[location[0]][location[1]+i]))
-                # Making the text red
-                self.board[location[0]][location[1]+i] = RED + " " + word[i] + " " + RESET
+                self.board[location[0]][location[1]+i] = " " + word[i] + " "
 
-        # Places the word going downwards
+        #Places the word going downwards
         elif direction.lower() == "down":
             for i in range(len(word)):
                 if self.board[location[0]][location[1]+i] != "   ":
                     premium_spots.append((word[i], self.board[location[0]][location[1]+i]))
-                # Making the text red
-                self.board[location[0]+i][location[1]] = RED + " " + word[i] + " " + RESET
+                self.board[location[0]+i][location[1]] = " " + word[i] + " "
 
         #Removes tiles from player's rack and replaces them with tiles from the bag.
         for letter in word:
@@ -401,8 +398,37 @@ def turn(player, board, bag):
         #Displays whose turn it is, the current board, and the player's rack.
         print("\nRound " + str(round_number) + ": " + player.get_name() + "'s turn \n")
         print(board.get_board())
-        print("\n" + player.get_name() + "'s Letter Rack: " + player.get_rack_str())
 
+        while True:
+            print(player.get_name() + "'s Letter Rack: " + player.get_rack_str())
+            print("command list:")
+            print("Continue to game, press 1")
+            print("shuffle rack, press 2")
+            print("change rack, press 3")
+            print("skip turn, press 4")
+            print("exit game, press 5\n")
+            
+            numm = input().strip()
+            if numm == "1":
+                break
+
+            if numm == "2":
+                player.rack.shuffle_rack()
+                print("Your rack has been shuffled!")
+
+            elif numm == "3":
+                print("")
+                #code buat ganti rack
+            
+            elif numm == "4":
+                print("")
+                #code buat skip turn
+
+            elif numm == "5":
+                print("thankyou for playing")
+                exit()
+
+        #continue the game (1 is presed)
         #Gets information in order to play a word.
         word_to_play = input("Word to play: ")
         location = []
