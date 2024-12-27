@@ -1,7 +1,5 @@
 from random import shuffle
 
-# TODO: Add new features
-
 """
 Scrabble Game
 Classes:
@@ -82,7 +80,7 @@ class Bag:
             self.bag.append(tile)
 
     def initialize_bag(self):
-        # Adds the intiial 100 tiles to the bag.
+        # Adds the initial 100 tiles to the bag.
         global LETTER_VALUES
         self.add_to_bag(Tile("A", LETTER_VALUES), 9)
         self.add_to_bag(Tile("B", LETTER_VALUES), 2)
@@ -173,7 +171,7 @@ class Player:
     """
 
     def __init__(self, bag):
-        # Intializes a player instance. Creates the player's rack by creating an instance of that class.
+        # Initializes a player instance. Creates the player's rack by creating an instance of that class.
         # Takes the bag as an argument, in order to create the rack.
         self.name = ""
         self.rack = Rack(bag)
@@ -432,34 +430,40 @@ def turn(player, board, bag):
 
         while True:
             print(player.get_name() + "'s Letter Rack: " + player.get_rack_str())
-            print("command list:")
+            print("Command list:")
             print("Continue to game, press 1")
-            print("shuffle rack, press 2")
-            print("change rack, press 3")
-            print("skip turn, press 4")
-            print("exit game, press 5\n")
+            print("Shuffle rack, press 2")
+            print("Skip turn, press 3")
+            print("Exit game, press 4\n")
 
-            numm = input().strip()
-            if numm == "1":
+            # Continue the game
+            option = input().strip()
+            if option == "1":
                 break
 
-            if numm == "2":
+            # Shuffle current player rack
+            if option == "2":
                 player.rack.shuffle_rack()
                 print("Your rack has been shuffled!")
 
-            elif numm == "3":
+            # Skip turns
+            elif option == "3":
                 print("")
-                # code buat ganti rack
+                # Get the index of the current player
+                current_index = players.index(player)
+                # Get the next player, wrapping around if necessary
+                next_index = (current_index + 1) % len(players)
+                # Update the player to the next one
+                player = players[next_index]
+                print(f"Current player {
+                      current_index + 1} has been skipped, moving on to the next player {next_index + 1}!")
 
-            elif numm == "4":
-                print("")
-                # code buat skip turn
-
-            elif numm == "5":
-                print("thankyou for playing")
+            # Exit games
+            elif option == "4":
+                print("Game exited")
                 exit()
 
-        # continue the game (1 is presed)
+        # continue the game (1 is pressed)
         # Gets information in order to play a word.
         word_to_play = input("Word to play: ")
         location = []
@@ -470,7 +474,6 @@ def turn(player, board, bag):
         else:
             location = [int(row), int(col)]
         direction = input("Direction of word (right or down): ")
-
         word = Word(word_to_play, location, player,
                     direction, board.board_array())
 
